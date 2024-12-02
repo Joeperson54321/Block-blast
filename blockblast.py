@@ -24,13 +24,15 @@ def drawGridSquares():
             drawSquare(50+j*35,115+i*35,colorsr[index],colorsg[index], colorsb[index],32)
 def generateBlocks():
      for z in range(1):
+        if(z==moveindex):
+            drawSquare(mousex-offsetx-3,mousey-offsety-3,0,0,0,73)
+        else:
+            drawSquare(367,132,0,0,0,73)
         for i in range(2):
             for j in range(2):
                 if(z==moveindex):
-                    drawSquare(mousex-offsetx,mousey-offsety,0,0,0,70)
                     drawSquare(mousex-offsetx+j*35,mousey-offsety+i*35,255,0,0,32)
                 else:
-                    drawSquare(370,135,0,0,0,67)
                     drawSquare(370+j*35,135+i*35,255,0,0,32)
 def checkCollisions():
     global offsetx
@@ -75,7 +77,7 @@ while True:
     mousey = pygame.mouse.get_pos()[1]
     mousedown = pygame.mouse.get_pressed()[0]
     screen.fill((0,64,255))
-    drawSquare(50,115,0,0,0,277)
+    drawSquare(47,112,0,0,0,283)
     drawGridSquares()
     moveindex = checkCollisions()
     generateBlocks()
