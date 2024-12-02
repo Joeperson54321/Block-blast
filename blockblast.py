@@ -3,21 +3,16 @@ spaces = []
 colorsr = []
 colorsg = []
 colorsb = []
-colorsr_2 = []
-colorsg_2 = []
-colorsb_2 = []
+moveindex=-1
 
 for i in range(64):
     spaces.append(0)
     colorsr.append(10)
     colorsg.append(10)
     colorsb.append(120)
-    colorsr_2.append(0)
-    colorsg_2.append(0)
-    colorsb_2.append(0)
 pygame.init()
 pygame.display.set_caption("Block Blast")
-screen = pygame.display.set_mode((580,750))
+screen = pygame.display.set_mode((580,500))
 def drawSquare(x,y,r,g,b,len):
     pygame.draw.rect(screen,(r,g,b),pygame.Rect(x,y,len,len))
 def background_square(x,y,r,g,b,len):
@@ -26,17 +21,64 @@ def drawGridSquares():
     for i in range(8):
         for j in range(8):
             index =i*8+j
-            drawSquare(130+j*45,115+i*45,colorsr[index],colorsg[index], colorsb[index],45)
-            background_square(140+j*42,125+i*42,colorsr_2[index],colorsg_2[index],colorsb_2[index],40)
-def drawGridLines():
-    print("left")
-drawSquare(100,100,0,0,0,50)
-background_square(100,100,0,0,0,50)
-#pygame.draw.rect(screen,(100,100,50),pygame.Rect(50,50,50,50))
+            drawSquare(50+j*35,115+i*35,colorsr[index],colorsg[index], colorsb[index],32)
+def generateBlocks():
+     for z in range(1):
+        for i in range(2):
+            for j in range(2):
+                if(z==moveindex):
+                    drawSquare(mousex-offsetx,mousey-offsety,0,0,0,70)
+                    drawSquare(mousex-offsetx+j*35,mousey-offsety+i*35,255,0,0,32)
+                else:
+                    drawSquare(370,135,0,0,0,67)
+                    drawSquare(370+j*35,135+i*35,255,0,0,32)
+def checkCollisions():
+    global offsetx
+    global offsety
+    if(not mousedown):
+        if (moveindex !=-1):
+            tempx = mousex-offsetx-50
+            tempy = mousey-offsety-115
+            index_x = round(tempx/35)
+            index_y = round(tempy/35)
+            print(index_x)
+            print(index_y)
+            if(index_x<=6 and index_x>=0 and index_y<=7 and index_y>=0):
+                spaces[index_y*8+index_x]=1
+                spaces[index_y*8+(index_x+1)]=1
+                spaces[(index_y+1)*8+(index_x+1)]=1
+                spaces[(index_y+1)*8+(index_x)]=1
+                colorsr[index_y*8+index_x]=255
+                colorsr[index_y*8+(index_x+1)]=255
+                colorsr[(index_y+1)*8+(index_x+1)]=255
+                colorsr[(index_y+1)*8+(index_x)]=255
+                colorsg[index_y*8+index_x]=1
+                colorsg[index_y*8+(index_x+1)]=1
+                colorsg[(index_y+1)*8+(index_x+1)]=1
+                colorsg[(index_y+1)*8+(index_x)]=1
+                colorsb[index_y*8+index_x]=1
+                colorsb[index_y*8+(index_x+1)]=1
+                colorsb[(index_y+1)*8+(index_x+1)]=1
+                colorsb[(index_y+1)*8+(index_x)]=1
+        return -1
+    elif(moveindex==-1):
+        if(mousedown and mousex<450 and mousex>370 and mousey>135 and mousey<205):
+            offsetx = mousex-370
+            offsety = mousey-135
+            return 0
+    else:
+        return moveindex
+offsetx = 0
+offsety = 0
 while True:
-    #pygame.quit()
+    mousex = pygame.mouse.get_pos()[0]
+    mousey = pygame.mouse.get_pos()[1]
+    mousedown = pygame.mouse.get_pressed()[0]
     screen.fill((0,64,255))
+    drawSquare(50,115,0,0,0,277)
     drawGridSquares()
+    moveindex = checkCollisions()
+    generateBlocks()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
