@@ -3,6 +3,8 @@ spaces = []
 colorsr = []
 colorsg = []
 colorsb = []
+rows = []
+columns = []
 moveindex=-1
 
 
@@ -44,8 +46,8 @@ def checkCollisions():
            tempy = mousey-offsety-115
            index_x = round(tempx/35)
            index_y = round(tempy/35)
-           print(index_x)
-           print(index_y)
+           #print(index_x)
+           #print(index_y)
            if(index_x<=6 and index_x>=0 and index_y<=7 and index_y>=0):
 
 
@@ -84,8 +86,35 @@ def checkCollisions():
    else:
        return moveindex
 
+def check_for_completed_lines():
+    # Check for completed rows
+    for row in range(8):
+        if all(spaces[row * 8 + col] == 1 for col in range(8)):  # If all values in the row are 1
+            clear_row(row)
 
-#def Check_For_Completed_Lines():
+    # Check for completed columns
+    for col in range(8):
+        if all(spaces[row * 8 + col] == 1 for row in range(8)):  # If all values in the column are 1
+            clear_column(col)
+
+def clear_row(row):
+    # Set the entire row to 0 (clear the row)
+    for col in range(8):
+        spaces[row * 8 + col] = 0
+        colorsr[row * 8 + col] = 10
+        colorsg[row * 8 + col] = 10
+        colorsb[row * 8 + col] = 120
+
+def clear_column(col):
+    # Set the entire column to 0 (clear the column)
+    for row in range(8):
+        spaces[row * 8 + col] = 0
+        colorsr[row * 8 + col] = 10
+        colorsg[row * 8 + col] = 10
+        colorsb[row * 8 + col] = 120
+
+
+
 
 
 offsetx = 0
@@ -97,6 +126,7 @@ while True:
    screen.fill((0,64,255))
    drawSquare(47,112,0,0,0,283)
    drawGridSquares()
+   check_for_completed_lines()
    moveindex = checkCollisions()
    generateBlocks()
    for event in pygame.event.get():
@@ -104,4 +134,5 @@ while True:
            pygame.quit()
            sys.exit()
    pygame.display.update()
+
 
